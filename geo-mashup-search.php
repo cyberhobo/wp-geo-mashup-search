@@ -136,8 +136,10 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 			$this->current_result = -1;
 			$this->units = isset( $_REQUEST['units'] ) ? $_REQUEST['units'] : 'km';
 			$search_text = isset( $_REQUEST['location_text'] ) ? $_REQUEST['location_text'] : '';
-			$radius = isset( $_REQUEST['radius'] ) ? $_REQUEST['radius'] : 'km';
+			$units = $this->units; // Put $units in template scope
+			$radius = isset( $_REQUEST['radius'] ) ? $_REQUEST['radius'] : '';
 			$distance_factor = ( 'km' == $this->units ) ? 1 : self::MILES_PER_KILOMETER;
+			$max_km = 20000;
 			$geo_mashup_search = &$this;
 			if ( !empty( $_REQUEST['location_text'] ) ) {
 				$near_location = GeoMashupDB::blank_location( ARRAY_A );
@@ -149,7 +151,7 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 						'near_lng' => $near_location['lng'],
 						'sort' => 'distance_km ASC'
 					);
-					$radius_km = 20000;
+					$radius_km = $max_km;
 
 					if ( isset( $_REQUEST['radius'] ) )
 						$radius_km = absint( $_REQUEST['radius'] ) / $distance_factor;
@@ -161,8 +163,11 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 
 					$this->results = GeoMashupDB::get_object_locations( $geo_query_args );
 					$this->result_count = count( $this->results );
+					if ( $this->result_count > 0 )
+							$max_km = $this->results[$this->result_count-1]->distance_km;
 				}
 			}
+			$approximate_zoom = absint( log( 10000 / $max_km, 2 ) );
 
 			// Buffer output from the template
 			$template = locate_template( 'geo-mashup-search-results.php' );
@@ -189,6 +194,24 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 				wp_reset_postdata();
 			}
 			return false;
+		}
+
+		/**
+		 * Get an array of the post IDs found.
+		 *
+		 * @return array Post IDs.
+		 */
+		public function get_the_IDs() {
+			return wp_list_pluck( $this->results, 'object_id' );
+		}
+
+		/**
+		 * Get a comma separated list of the post IDs found.
+		 *
+		 * @return string ID list.
+		 */
+		public function get_the_ID_list() {
+			return implode( ',', $this->get_the_IDs() );
 		}
 
 		/**
