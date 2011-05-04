@@ -140,12 +140,13 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 			$distance_factor = ( 'km' == $this->units ) ? 1 : self::MILES_PER_KILOMETER;
 			$geo_mashup_search = &$this;
 			if ( !empty( $_REQUEST['location_text'] ) ) {
+				$near_location = GeoMashupDB::blank_location( ARRAY_A );
 				if ( GeoMashupDB::geocode( $_REQUEST['location_text'], $near_location ) ) {
 					// A search center was found, we can continue
 					$geo_query_args = array(
 						'object_name' => 'post',
-						'near_lat' => $near_location->lat,
-						'near_lng' => $near_location->lng,
+						'near_lat' => $near_location['lat'],
+						'near_lng' => $near_location['lng'],
 						'sort' => 'distance_km ASC'
 					);
 					$radius_km = 20000;
@@ -236,7 +237,7 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 			// If jQuery is in use, enhance the search form(s) a bit
 			?>
 			<script type="text/javascript">
-			if ( jQuery ) {
+			if ( typeof jQuery !== 'undefined' ) {
 				jQuery( function( $ ) {
 					$( '.geo-mashup-search-input' ).focus( function() {
 						$( this ).val('');
