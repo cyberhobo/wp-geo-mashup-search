@@ -90,7 +90,7 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 		 * Add hooks needed for the current request.
 		 */
 		public function action_init() {
-			if ( isset( $_REQUEST['geo_mashup_search_submit'] ) ) {
+			if ( isset( $_REQUEST['location_text'] ) ) {
 				// Add search results to page content
 				add_filter( 'the_content', array( $this, 'filter_the_content' ) );
 			}
@@ -124,7 +124,7 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 		 */
 		public function filter_the_content( $content ) {
 
-			if ( !isset( $_REQUEST['geo_mashup_search_submit'] ) )
+			if ( !isset( $_REQUEST['location_text'] ) )
 				return $content;
 
 			// Remove this filter to prevent recursion
@@ -135,6 +135,7 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 			$this->result = null;
 			$this->current_result = -1;
 			$this->units = isset( $_REQUEST['units'] ) ? $_REQUEST['units'] : 'km';
+			// Define variables for the template
 			$search_text = isset( $_REQUEST['location_text'] ) ? $_REQUEST['location_text'] : '';
 			$units = $this->units; // Put $units in template scope
 			$radius = isset( $_REQUEST['radius'] ) ? $_REQUEST['radius'] : '';
