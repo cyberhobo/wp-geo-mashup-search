@@ -3,7 +3,7 @@
   Plugin Name: Geo Mashup Search
   Plugin URI: http://code.google.com/p/wordpress-geo-mashup/downloads
   Description: Requires the Geo Mashup plugin. Adds a geo search widget.
-  Version: 1.1
+  Version: 1.1.1
   License: GPL2+
   Author: Dylan Kuhn
   Author URI: http://www.cyberhobo.net/
