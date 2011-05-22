@@ -26,7 +26,7 @@
 		<option value="<?php echo $cat->term_id; ?>"<?php
 			if ( $widget->get_default_value( $_REQUEST, 'map_cat' ) == $cat->term_id )
 				echo ' selected="selected"';
-		?>><?php echo $cat->name; ?></option>;
+		?>><?php echo $cat->name; ?></option>
 	<?php endforeach; ?>
 	</select>
 	<?php _e( 'posts', 'GeoMashupSearch' ); ?></label>
