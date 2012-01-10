@@ -3,7 +3,7 @@
   Plugin Name: Geo Mashup Search
   Plugin URI: http://code.google.com/p/wordpress-geo-mashup/downloads
   Description: Requires the Geo Mashup plugin. Adds a geo search widget.
-  Version: 1.1.1
+  Version: 1.1.1+
   License: GPL2+
   Author: Dylan Kuhn
   Author URI: http://www.cyberhobo.net/
@@ -32,6 +32,7 @@
 if ( !class_exists( 'GeoMashupSearch' ) ) {
 
 	class GeoMashupSearch {
+		const VERSION = '1.1.1+';
 		const MILES_PER_KILOMETER = 0.621371;
 
 		public $dir_path;
@@ -94,6 +95,7 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 				// Add search results to page content
 				add_filter( 'the_content', array( $this, 'filter_the_content' ) );
 			}
+			add_action( 'geo_mashup_render_map', array( $this, 'action_geo_mashup_render_map' ) );
 		}
 
 		/**
@@ -112,6 +114,17 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 				echo __( 'The Geo Mashup plugin must be installed and activated before Geo Mashup Search.', 'GeoMashupSearch' );
 				echo '</div>';
 				deactivate_plugins( $this->basename );
+			}
+		}
+
+		/**
+		 * Queue custom script for the results map.
+		 */
+		public function action_geo_mashup_render_map() {
+			if ( 'search-results-map' == GeoMashupRenderMap::map_property( 'name' ) ) {
+				// Custom javascript for optional use in template
+				wp_enqueue_script( 'geo-mashup-search-results', path_join( $this->url_path, 'js/search-results.js' ), array( 'geo-mashup' ), self::VERSION, true );
+				GeoMashupRenderMap::enqueue_script( 'geo-mashup-search-results' );
 			}
 		}
 
