@@ -2,11 +2,11 @@
  * Geo Mashup customization for search results map
  */
 GeoMashup.addAction( 'loadedMap', function( properties, map ) {
-	var search_marker, icon; 
+	var search_marker, search_latlng, icon; 
 	// Double-check that we're customizing the right map
 	if ( 'search-results-map' == properties.name && properties.search_text ) {
-		// The blue dot goes in the center
 
+		// Put the blue dot at the search location
 		if ( 'google' == properties.map_api ) {
 
 			icon = new google.maps.Icon();
@@ -15,7 +15,8 @@ GeoMashup.addAction( 'loadedMap', function( properties, map ) {
 			icon.iconSize = new google.maps.Size( 16, 16 );
 			icon.shadowSize = new google.maps.Size( 25, 16 );
 			icon.iconAnchor = new google.maps.Point( 8, 8 );
-			search_marker = new google.maps.Marker( map.getCenter(), {
+			search_latlng = new google.maps.LatLng( parseFloat( properties.search_lat), parseFloat( properties.search_lng ) );
+			search_marker = new google.maps.Marker( search_latlng, {
 				icon: icon,
 				title: properties.search_text
 			} );
@@ -24,7 +25,8 @@ GeoMashup.addAction( 'loadedMap', function( properties, map ) {
 		} else {
 
 			// mxn
-			search_marker = new mxn.Marker( map.getCenter() );
+			search_latlng = new mxn.LatLonPoint( parseFloat( properties.search_lat), parseFloat( properties.search_lng ) );
+			search_marker = new mxn.Marker( search_latlng );
 			search_marker.addData( {
 				icon: properties.search_plugin_url_path + '/images/bluedot16.png',
 				iconShadow: properties.search_plugin_url_path + '/images/dotshadow.png',

@@ -1,0 +1,57 @@
+/**global jQuery, geo_mashup_search_find_me_env */
+
+jQuery( function( $ ) {
+	$( '.geo-mashup-search-find-me' ).show().click( function() {
+		var $button = $( this ),
+			$search_input = $( 'input.geo-mashup-search-input' ),
+			$submit_button = $( 'input[name=geo_mashup_search_submit]' ),
+			ignore_timeout,
+
+			succeed = function( lat, lng ) {
+				clearTimeout( ignore_timeout );
+				$button.hide();
+				$search_input.focus().val( lat + ',' + lng );
+				$submit_button.focus();
+			},
+
+			fail = function() {
+				clearTimeout( ignore_timeout );
+				$button.hide();
+				$search_input.val( geo_mashup_search_find_me_env.fail_message );
+			},
+			
+			alternateGeolocation = function() {
+				var geoplugin_url;
+					
+				clearTimeout( ignore_timeout );
+
+				if ( !geo_mashup_search_find_me_env.client_ip ) {
+					fail();
+				}
+				geoplugin_url = 'http://www.geoplugin.net/json.gp?jsoncallback=?&ip=' + 
+					geo_mashup_search_find_me_env.client_ip;
+				$.getJSON( geoplugin_url, function( data ) {
+					if ( data.geoplugin_latitude && data.geoplugin_longitude ) {
+						succeed( data.geoplugin_latitude, data.geoplugin_longitude );
+					} else {
+						fail();
+					}
+				} ).error( fail );
+			};
+
+		$button.prop( 'disabled', true );
+		if ( navigator.geolocation ) {
+			navigator.geolocation.getCurrentPosition( function( position ) {
+				succeed( position.coords.latitude, position.coords.longitude );
+			}, function( error ) {
+				alternateGeolocation();
+			}, { timeout: 4000 } );
+
+			// Firefox needs another timer, because nothing happens if the user chooses "not now"
+			ignore_timeout = setTimeout( alternateGeolocation, 10000 );
+
+		}
+
+		return false; // Don't submit
+	});
+});

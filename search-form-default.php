@@ -56,4 +56,7 @@
 		}
 	?>" />
 	<input id="<?php echo $widget_id; ?>-submit" name="geo_mashup_search_submit" type="submit" value="<?php _e( 'Search', 'GeoMashupSearch' ); ?>" />
+<?php if ( !empty( $instance['find_me_button'] ) ) : ?>
+	<button id="<?php echo $widget_id; ?>-find-me" class="geo-mashup-search-find-me" style="display:none;"><?php echo $instance['find_me_button']; ?></button>
+<?php endif; ?>
 </form>

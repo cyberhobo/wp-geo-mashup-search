@@ -41,6 +41,8 @@
 		'object_ids' => $geo_mashup_search->get_the_ID_list(),
 		'center_lat' => $near_location['lat'],
 		'center_lng' => $near_location['lng'],
+		'search_lat' => $near_location['lat'],
+		'search_lng' => $near_location['lng'],
 		'zoom' => 	$approximate_zoom + 1 // Adjust to taste
 		) ); ?>
 

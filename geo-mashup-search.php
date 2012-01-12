@@ -44,6 +44,7 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 		private $current_result;
 		private $result_count;
 		private $units;
+		private $scripts;
 
 		/**
 		 * Static instance access.
@@ -66,6 +67,7 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 			$this->dir_path = dirname( __FILE__ );
 			$this->basename = plugin_basename( __FILE__ );
 			$this->url_path = plugins_url( '', __FILE__ );
+			$this->scripts = array();
 			load_plugin_textdomain( 'GeoMashupSearch', '', dirname( $this->basename ) );
 
 			// Scan Geo Mashup after it has been loaded
@@ -269,20 +271,21 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 				return $distance;
 		}
 
+		/**
+		 * Add a script to modify form behavior.
+		 * 
+		 * @param string $handle Handle the script was registered with
+		 */
+		public function enqueue_script( $handle ) {
+			if ( !in_array( $handle, $this->scripts ) ) 
+				$this->scripts[] = $handle;
+		}
+
+		/**
+		 * Print form scripts in the footer.
+		 */
 		public function action_wp_footer() {
-			global $wp_scripts;
-			// If jQuery is in use, enhance the search form(s) a bit
-			?>
-			<script type="text/javascript">
-			if ( typeof jQuery !== 'undefined' ) {
-				jQuery( function( $ ) {
-					$( '.geo-mashup-search-input' ).focus( function() {
-						$( this ).val('');
-					} );
-				})
-			}
-			</script>
-			<?php
+			wp_print_scripts( $this->scripts );
 		}
 	}
 
@@ -304,8 +307,19 @@ class GeoMashupSearchWidget extends WP_Widget {
 
 	// Display Widget
 	function widget( $args, $instance ) {
-		// Add the footer script action
-		add_action( 'wp_footer', array( GeoMashupSearch::get_instance(), 'action_wp_footer' ) );
+		// Arrange footer scripts
+		$geo_mashup_search = GeoMashupSearch::get_instance();
+		wp_register_script( 'geo-mashup-search-form', path_join( $geo_mashup_search->url_path, 'js/search-form.js' ), array(), GeoMashupSearch::VERSION, true );
+		$geo_mashup_search->enqueue_script( 'geo-mashup-search-form' );
+		if ( !empty( $instance['find_me_button'] ) ) {
+			wp_register_script( 'geo-mashup-search-find-me', path_join( $geo_mashup_search->url_path, 'js/find-me.js' ), array( 'jquery' ), GeoMashupSearch::VERSION, true );
+			wp_localize_script( 'geo-mashup-search-find-me', 'geo_mashup_search_find_me_env', array( 
+				'client_ip' => $_SERVER['REMOTE_ADDR'],
+				'fail_message' => __( 'Couldn\'t find you...', 'GeoMashupSearch' ),
+			) );
+			$geo_mashup_search->enqueue_script( 'geo-mashup-search-find-me' );
+		}
+		add_action( 'wp_footer', array( $geo_mashup_search, 'action_wp_footer' ) );
 
 		extract( $args );
 		$title = apply_filters( 'widget_title', $instance['title'] );
@@ -348,6 +362,7 @@ class GeoMashupSearchWidget extends WP_Widget {
 		$instance['units'] = in_array( $new_instance['units'], array( 'km', 'mi' ) ) ? $new_instance['units'] : 'km';
 		$instance['radius_list'] = sanitize_text_field( $new_instance['radius_list'] );
 		$instance['results_page_id'] = intval( $new_instance['results_page_id'] );
+		$instance['find_me_button'] = sanitize_text_field( $new_instance['find_me_button'] );
 
 		return $instance;
 	}
@@ -392,6 +407,18 @@ class GeoMashupSearchWidget extends WP_Widget {
 				 name="<?php echo $this->get_field_name( 'default_search_text' ); ?>"
 				 type="text"
 				 value="<?php echo $this->get_default_value( $instance, 'default_search_text', __( 'city, state or zip', 'GeoMashupSearch' ) ); ?>" />
+	</label>
+</p>
+<p>
+	<label for="<?php echo $this->get_field_id( 'find_me_button' ); ?>"
+			 title="<?php _e( 'Text for the user locate button, leave blank to omit.', 'GeoMashupSearch' ); ?>">
+				 <?php _e( 'Find Me Button:', 'GeoMashupSearch' ); ?>
+		<span class="help-tip">?</span>
+		<input class="widefat"
+				 id="<?php echo $this->get_field_id( 'find_me_button' ); ?>"
+				 name="<?php echo $this->get_field_name( 'find_me_button' ); ?>"
+				 type="text"
+				 value="<?php echo $this->get_default_value( $instance, 'find_me_button', __( 'Find Me', 'GeoMashupSearch' ) ); ?>" />
 	</label>
 </p>
 <p>
