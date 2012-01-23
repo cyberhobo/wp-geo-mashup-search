@@ -150,6 +150,7 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 			$this->result = null;
 			$this->current_result = -1;
 			$this->units = isset( $_REQUEST['units'] ) ? $_REQUEST['units'] : 'km';
+
 			// Define variables for the template
 			$search_text = isset( $_REQUEST['location_text'] ) ? $_REQUEST['location_text'] : '';
 			$units = $this->units; // Put $units in template scope
@@ -157,9 +158,14 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 			$distance_factor = ( 'km' == $this->units ) ? 1 : self::MILES_PER_KILOMETER;
 			$max_km = 20000;
 			$geo_mashup_search = &$this;
+
 			if ( !empty( $_REQUEST['location_text'] ) ) {
+
 				$near_location = GeoMashupDB::blank_location( ARRAY_A );
-				if ( GeoMashupDB::geocode( $_REQUEST['location_text'], $near_location ) ) {
+				$geocode_text = empty( $_REQUEST['geolocation'] ) ? $_REQUEST['location_text'] : $_REQUEST['geolocation'];
+
+				if ( GeoMashupDB::geocode( $geocode_text, $near_location ) ) {
+
 					// A search center was found, we can continue
 					$geo_query_args = array(
 						'object_name' => 'post',
@@ -182,7 +188,9 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 					if ( $this->result_count > 0 )
 							$max_km = $this->results[$this->result_count-1]->distance_km;
 				}
+
 			}
+
 			$approximate_zoom = absint( log( 10000 / $max_km, 2 ) );
 
 			// Buffer output from the template
@@ -309,16 +317,20 @@ class GeoMashupSearchWidget extends WP_Widget {
 	function widget( $args, $instance ) {
 		// Arrange footer scripts
 		$geo_mashup_search = GeoMashupSearch::get_instance();
+
 		wp_register_script( 'geo-mashup-search-form', path_join( $geo_mashup_search->url_path, 'js/search-form.js' ), array(), GeoMashupSearch::VERSION, true );
 		$geo_mashup_search->enqueue_script( 'geo-mashup-search-form' );
+
 		if ( !empty( $instance['find_me_button'] ) ) {
 			wp_register_script( 'geo-mashup-search-find-me', path_join( $geo_mashup_search->url_path, 'js/find-me.js' ), array( 'jquery' ), GeoMashupSearch::VERSION, true );
 			wp_localize_script( 'geo-mashup-search-find-me', 'geo_mashup_search_find_me_env', array( 
 				'client_ip' => $_SERVER['REMOTE_ADDR'],
 				'fail_message' => __( 'Couldn\'t find you...', 'GeoMashupSearch' ),
+				'my_location_message' => __( 'My Location', 'GeoMashupSearch' ),
 			) );
 			$geo_mashup_search->enqueue_script( 'geo-mashup-search-find-me' );
 		}
+
 		add_action( 'wp_footer', array( $geo_mashup_search, 'action_wp_footer' ) );
 
 		extract( $args );

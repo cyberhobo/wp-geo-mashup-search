@@ -3,14 +3,27 @@
 jQuery( function( $ ) {
 	$( '.geo-mashup-search-find-me' ).show().click( function() {
 		var $button = $( this ),
-			$search_input = $( 'input.geo-mashup-search-input' ),
-			$submit_button = $( 'input[name=geo_mashup_search_submit]' ),
+			$form = $button.parent( 'form' ),
+			$search_input = $form.find( 'input.geo-mashup-search-input' ),
+			$geolocation_input = $form.find( 'input[name=geolocation]' ),
+			$submit_button = $form.find( 'input[name=geo_mashup_search_submit]' ),
 			ignore_timeout,
 
 			succeed = function( lat, lng ) {
+				var geoplugin_url = 'http://www.geoplugin.net/extras/location.gp?jsoncallback=?&format=json&lat=' + 
+					encodeURIComponent( lat ) + '&long=' + encodeURIComponent( lng );
 				clearTimeout( ignore_timeout );
 				$button.hide();
-				$search_input.focus().val( lat + ',' + lng );
+				$geolocation_input.val( lat + ',' + lng );
+				$.getJSON( geoplugin_url, function( data ) {
+					if ( data.geoplugin_place && data.geoplugin_region ) {
+						$search_input.val( data.geoplugin_place + ', ' + data.geoplugin_region );
+					} else {
+						$search_input.val( geo_mashup_search_find_me_env.my_location_message );
+					}
+				} ).error( function() {
+					$search_input.val( geo_mashup_search_find_me_env.my_location_message );
+				} );
 				$submit_button.focus();
 			},
 
@@ -40,12 +53,17 @@ jQuery( function( $ ) {
 			};
 
 		$button.prop( 'disabled', true );
+
+		$search_input.change( function() {
+			$geolocation_input.val( '' );
+		} );
+
 		if ( navigator.geolocation ) {
 			navigator.geolocation.getCurrentPosition( function( position ) {
 				succeed( position.coords.latitude, position.coords.longitude );
 			}, function( error ) {
 				alternateGeolocation();
-			}, { timeout: 4000 } );
+			}, {timeout: 4000} );
 
 			// Firefox needs another timer, because nothing happens if the user chooses "not now"
 			ignore_timeout = setTimeout( alternateGeolocation, 10000 );
