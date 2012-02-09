@@ -19,6 +19,7 @@
 ?>
 <form class="geo-mashup-search-form" method="post" action="<?php echo $action_url; ?>">
 
+<input name="object_name" type="hidden" value="<?php echo esc_attr( $instance['object_name'] ); ?>" />
 <?php if ( !empty( $categories ) ) : ?>
 	<label for="<?php echo $widget_id; ?>-categories"><?php _e( 'find', 'GeoMashupSearch' ); ?>
 	<select id="<?php echo $widget_id; ?>-categories" name="map_cat">
@@ -46,7 +47,7 @@
 <?php endif; // Radius ?>
 
 	<input name="units" type="hidden" value="<?php echo esc_attr( $instance['units'] ); ?>" />
-
+	
 	<label for="<?php echo $widget_id; ?>-input"><?php _e( empty( $radii ) ? 'near' : 'of', 'GeoMashupSearch' ); ?></label>
 	<input id="<?php echo $widget_id; ?>-input" class="geo-mashup-search-input" name="location_text" type="text" value="<?php
 		if ( !empty( $_REQUEST['location_text'] ) ) {

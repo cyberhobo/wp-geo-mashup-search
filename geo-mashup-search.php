@@ -44,6 +44,7 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 		private $current_result;
 		private $result_count;
 		private $units;
+		private $object_name;
 		private $scripts;
 
 		/**
@@ -150,9 +151,11 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 			$this->result = null;
 			$this->current_result = -1;
 			$this->units = isset( $_REQUEST['units'] ) ? $_REQUEST['units'] : 'km';
+			$this->object_name = (isset( $_REQUEST['object_name'] ) && in_array($_REQUEST['object_name'], array('post', 'user', 'comment')) ) ? $_REQUEST['object_name'] : 'post';
 			// Define variables for the template
 			$search_text = isset( $_REQUEST['location_text'] ) ? $_REQUEST['location_text'] : '';
 			$units = $this->units; // Put $units in template scope
+			$object_name=$this->object_name;
 			$radius = isset( $_REQUEST['radius'] ) ? $_REQUEST['radius'] : '';
 			$distance_factor = ( 'km' == $this->units ) ? 1 : self::MILES_PER_KILOMETER;
 			$max_km = 20000;
@@ -162,7 +165,7 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 				if ( GeoMashupDB::geocode( $_REQUEST['location_text'], $near_location ) ) {
 					// A search center was found, we can continue
 					$geo_query_args = array(
-						'object_name' => 'post',
+						'object_name' => $object_name,
 						'near_lat' => $near_location['lat'],
 						'near_lng' => $near_location['lng'],
 						'sort' => 'distance_km ASC'
@@ -229,6 +232,23 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 		public function get_the_ID_list() {
 			return implode( ',', $this->get_the_IDs() );
 		}
+		
+		/**
+		 * Get a comma separated list of the post IDs found.
+		 *
+		 * @return string ID list.
+		 */
+		public function get_userdata() {
+			$this->current_result++;
+			$this->result = $this->results[$this->current_result];
+			if ( $this->result ) {
+				$user = get_userdata( $this->result->object_id );
+			}
+			return $user;
+		}
+		
+		
+		
 
 		/**
 		 * Set up the the current post to use in the results loop.
@@ -300,7 +320,7 @@ class GeoMashupSearchWidget extends WP_Widget {
 	// Construct Widget
 	function __construct() {
 		$default_options = array(
-			'description' => __( 'Search posts by Geo Mashup location.', 'GeoMashupSearch' )
+			'description' => __( 'Search content by Geo Mashup location.', 'GeoMashupSearch' )
 		);
 		parent::__construct( false, __( 'Geo Mashup Search', 'GeoMashupSearch' ), $default_options );
 	}
@@ -334,6 +354,7 @@ class GeoMashupSearchWidget extends WP_Widget {
 		// Set up template variables 
 		$widget = &$this;
 		$action_url = get_permalink( $results_page_id );
+		$object_name=$instance['object_name'];
 		$categories = array( );
 		if ( !empty( $instance['categories'] ) ) {
 			$category_args = '';
@@ -359,6 +380,7 @@ class GeoMashupSearchWidget extends WP_Widget {
 		$instance['title'] = sanitize_text_field( $new_instance['title'] );
 		$instance['default_search_text'] = sanitize_text_field( $new_instance['default_search_text'] );
 		$instance['categories'] = sanitize_text_field( $new_instance['categories'] );
+		$instance['object_name'] = in_array( $new_instance['object_name'], array( 'post', 'user', 'comment' ) ) ? $new_instance['object_name'] : 'post';
 		$instance['units'] = in_array( $new_instance['units'], array( 'km', 'mi' ) ) ? $new_instance['units'] : 'km';
 		$instance['radius_list'] = sanitize_text_field( $new_instance['radius_list'] );
 		$instance['results_page_id'] = intval( $new_instance['results_page_id'] );
@@ -385,6 +407,26 @@ class GeoMashupSearchWidget extends WP_Widget {
 		$categories = get_categories( 'hide_empty=0' );
 		$pages = get_pages();
 ?>
+		<script type="text/javascript">
+		
+		if ( typeof jQuery !== 'undefined' ) {
+			function check_content_type(select) {
+				if (select.val() != 'post'){
+					jQuery("input#<?php echo $this->get_field_id( 'categories' ); ?>").parents('p:first').hide();
+				}else{
+					jQuery("input#<?php echo $this->get_field_id( 'categories' ); ?>").parents('p:first').show();
+				}
+			}
+			
+			jQuery(document).ready(function() { 
+				check_content_type( jQuery("select#<?php echo $this->get_field_id( 'object_name' ); ?>") );
+				
+				jQuery("select#<?php echo $this->get_field_id( 'object_name' ); ?>").change(function() {
+					check_content_type( jQuery(this) );
+				});
+			});
+		}
+		</script>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"
 					 title="<?php _e( 'Widget heading, leave blank to omit.', 'GeoMashupSearch' ); ?>">
@@ -421,6 +463,22 @@ class GeoMashupSearchWidget extends WP_Widget {
 				 value="<?php echo $this->get_default_value( $instance, 'find_me_button', __( 'Find Me', 'GeoMashupSearch' ) ); ?>" />
 	</label>
 </p>
+<p>
+	<label for="<?php echo $this->get_field_id( 'object_name' ); ?>">
+		<?php _e( 'Type of content:', 'GeoMashupSearch' ); ?>
+		 		<select id="<?php echo $this->get_field_id( 'object_name' ); ?>" name="<?php echo $this->get_field_name( 'object_name' ); ?>">
+		 			<option value="post"<?php echo 'post' == $this->get_default_value( $instance, 'object_name' ) ? ' selected="selected"' : ''; ?>>
+				<?php _e( 'posts', 'GeoMashupSearch' ); ?>
+ 			</option>
+ 			<option value="user"<?php echo 'user' == $this->get_default_value( $instance, 'object_name' ) ? ' selected="selected"' : ''; ?>>
+				<?php _e( 'users', 'GeoMashupSearch' ); ?>
+ 			</option>
+ 			<option value="comment"<?php echo 'comment' == $this->get_default_value( $instance, 'object_name' ) ? ' selected="selected"' : ''; ?>>
+				<?php _e( 'comments', 'GeoMashupSearch' ); ?>
+ 			</option>
+ 		</select>
+ 	</label>
+ </p>
 <p>
 	<label for="<?php echo $this->get_field_id( 'categories' ); ?>"
 			 title="<?php _e( 'Category dropdown contents. Blank to omit, \'all\' for all post categories, or comma separated category IDs to include.', 'GeoMashupSearch' ); ?>">

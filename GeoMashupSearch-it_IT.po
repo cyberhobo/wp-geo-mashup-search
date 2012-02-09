@@ -1,0 +1,188 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Geo Mashup Search v1.1.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2012-02-04 15:00+0000\n"
+"Last-Translator: w3badmin <webagency@w3b.it>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: Italian\n"
+"X-Poedit-Country: ITALY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;\n"
+"X-Poedit-Basepath: \n"
+"X-Poedit-Bookmarks: \n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Textdomain-Support: yes"
+
+#: geo-mashup-search.php:117
+#@ GeoMashupSearch
+msgid "The Geo Mashup plugin must be installed and activated before Geo Mashup Search."
+msgstr "Il plugin Geo Mashup deve essere installato prima di attivare Geo Mashup Search."
+
+#: geo-mashup-search.php:325
+#@ GeoMashupSearch
+msgid "Geo Mashup Search"
+msgstr "Geo Mashup Search"
+
+#: geo-mashup-search.php:350
+#@ GeoMashupSearch
+msgid "No Geo Mashup Search result page found - check widget settings."
+msgstr "Nessuna pagina dei risultati per Geo Mashup Search trovata - controllare le impostazioni del widget."
+
+#: geo-mashup-search.php:432
+#@ GeoMashupSearch
+msgid "Widget heading, leave blank to omit."
+msgstr "Intestazioni del widget, lasciare vuoto per non mostrare."
+
+#: geo-mashup-search.php:433
+#@ GeoMashupSearch
+msgid "Title:"
+msgstr "Titolo:"
+
+#: geo-mashup-search.php:444
+#@ GeoMashupSearch
+msgid "Default text in the search text box for use as a prompt, leave blank to omit."
+msgstr "Testo predefinito per il campo di ricerca, lasciare vuoto per omettere."
+
+#: geo-mashup-search.php:445
+#@ GeoMashupSearch
+msgid "Default Search Text:"
+msgstr "Testo di ricerca predefinito"
+
+#: geo-mashup-search.php:451
+#@ GeoMashupSearch
+msgid "city, state or zip"
+msgstr "Città, stato o cap"
+
+#: geo-mashup-search.php:484
+#@ GeoMashupSearch
+msgid "Category dropdown contents. Blank to omit, 'all' for all post categories, or comma separated category IDs to include."
+msgstr "Contenuti della casella Categorie. Lasciare vuoto per nascondere, 'all' per gli articoli di tutte le categorie, o una lista di ID di categoria, separati dalla virgola."
+
+#: geo-mashup-search.php:485
+#@ GeoMashupSearch
+msgid "Category Menu:"
+msgstr "Menù  Categorie:"
+
+#: geo-mashup-search.php:496
+#@ GeoMashupSearch
+msgid "Units:"
+msgstr "Unità (di misura):"
+
+#: geo-mashup-search.php:499
+#@ GeoMashupSearch
+msgid "miles"
+msgstr "miglia"
+
+#: geo-mashup-search.php:502
+#@ GeoMashupSearch
+msgid "kilometers"
+msgstr "kilometri"
+
+#: geo-mashup-search.php:509
+#@ GeoMashupSearch
+msgid "Radius dropdown contents. Blank to omit, or comma separated numeric distances in selected units."
+msgstr "Menù delle distanze. Lasciare vuoto per nascondere, o inserire un elenco numerico di distanze (nell'unità selezionata) separate dalla virgola."
+
+#: geo-mashup-search.php:510
+#@ GeoMashupSearch
+msgid "Radius Menu:"
+msgstr "Menù Distanze:"
+
+#: geo-mashup-search.php:521
+#@ GeoMashupSearch
+msgid "The page where search results should be displayed."
+msgstr "La pagina in cui verranno mostrati i risultati della ricerca."
+
+#: geo-mashup-search.php:522
+#@ GeoMashupSearch
+msgid "Results Page:"
+msgstr "Pagina dei Risultati:"
+
+#: search-form-default.php:24
+#@ GeoMashupSearch
+msgid "find"
+msgstr "trova"
+
+#: geo-mashup-search.php:471
+#: search-form-default.php:33
+#@ GeoMashupSearch
+msgid "posts"
+msgstr "articoli"
+
+#: search-form-default.php:37
+#@ GeoMashupSearch
+msgid "within"
+msgstr "entro"
+
+#: search-form-default.php:51
+#@ GeoMashupSearch
+msgid "nearof"
+msgstr "vicino a"
+
+#: search-form-default.php:59
+#@ GeoMashupSearch
+msgid "Search"
+msgstr "Cerca"
+
+#: search-results-default.php:34
+#@ GeoMashupSearch
+msgid "Search results near"
+msgstr "Risultati vicini a"
+
+#: search-results-default.php:59
+#: search-results-default.php:71
+#@ GeoMashupSearch
+msgid "Distance"
+msgstr "Distanza"
+
+#: search-results-default.php:79
+#@ GeoMashupSearch
+msgid "No results found."
+msgstr "Nessun risultato trovato."
+
+#: geo-mashup-search.php:338
+#@ GeoMashupSearch
+msgid "Couldn't find you..."
+msgstr "Non riesco a localizzarti"
+
+#: geo-mashup-search.php:456
+#@ GeoMashupSearch
+msgid "Text for the user locate button, leave blank to omit."
+msgstr "Testo per il tasto di localizzazione dell'utente, lasciare vuoto per nascondere."
+
+#: geo-mashup-search.php:457
+#@ GeoMashupSearch
+msgid "Find Me Button:"
+msgstr "Tasto \\\"Trovami\\\":"
+
+#: geo-mashup-search.php:463
+#@ GeoMashupSearch
+msgid "Find Me"
+msgstr "Trovami"
+
+#: geo-mashup-search.php:323
+#@ GeoMashupSearch
+msgid "Search content by Geo Mashup location."
+msgstr "Cerca contenuti per posizione geografica di Geo Mashup."
+
+#: geo-mashup-search.php:468
+#@ GeoMashupSearch
+msgid "Type of content:"
+msgstr "Tipo di contenuto:"
+
+#: geo-mashup-search.php:474
+#@ GeoMashupSearch
+msgid "users"
+msgstr "utenti"
+
+#: geo-mashup-search.php:477
+#@ GeoMashupSearch
+msgid "comments"
+msgstr "commenti"
+

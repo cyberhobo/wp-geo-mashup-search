@@ -13,6 +13,7 @@
  * $search_text        string   The search text entered in the form
  * $radius             int      The search radius
  * $units              string   'mi' or 'km'
+ * $object_name        string   'post' or 'user' or 'comment'
  * $near_location      array    The location searched, including 'lat' and 'lng'
  * $distance_factor    float    The multiplier to convert the radius to kilometers
  * $approximate_zoom   int      A guess at a zoom level that will include all results
@@ -31,7 +32,8 @@
 <div id="geo-mashup-search-results">
 
 	<h2><?php _e( 'Search results near', 'GeoMashupSearch' ); ?> "<?php echo $search_text; ?>"</h2>
-
+	
+	<?php print_r($geo_mashup_search->get_the_ID_list());?>
 	<?php if ( $geo_mashup_search->have_posts() ) : ?>
 
 	<?php echo GeoMashup::map( array(
@@ -43,20 +45,35 @@
 		'center_lng' => $near_location['lng'],
 		'search_lat' => $near_location['lat'],
 		'search_lng' => $near_location['lng'],
+		'object_name'=> $object_name,
 		'zoom' => 	$approximate_zoom + 1 // Adjust to taste
 		) ); ?>
 
-	<?php while ( $geo_mashup_search->have_posts() ) : $geo_mashup_search->the_post(); ?>
-			<div class="search-result">
-				<h3><a href="<?php the_permalink(); ?>" title=""><?php the_title(); ?></a></h3>
-				<p><?php the_excerpt(); ?></p>
-				<p>
-			<?php _e( 'Distance', 'GeoMashupSearch' ); ?>:
-			<?php $geo_mashup_search->the_distance(); ?>
-		</p>
-	</div>
-	<?php endwhile; ?>
+		<?php if ($object_name == 'post'):?>
 
+			<?php while ( $geo_mashup_search->have_posts() ) : $geo_mashup_search->the_post(); ?>
+					<div class="search-result">
+						<h3><a href="<?php the_permalink(); ?>" title=""><?php the_title(); ?></a></h3>
+						<p><?php the_excerpt(); ?><?php print_r($user);?></p>
+						<p>
+					<?php _e( 'Distance', 'GeoMashupSearch' ); ?>:
+					<?php $geo_mashup_search->the_distance(); ?>
+				</p>
+			</div>
+			<?php endwhile; ?>
+		<?php elseif ($object_name == 'user'):?>
+			
+			<?php while ( $geo_mashup_search->have_posts() ) : $user=$geo_mashup_search->get_userdata(); ?>
+					<div class="search-result">
+						<?php echo "<pre>"; print_r($user); echo "</pre>";?>
+						<h3><?php echo $user->first_name.' '.$user->last_name;?> aka <?php echo $user->user_nicename?></h3>
+						<p>
+					<?php _e( 'Distance', 'GeoMashupSearch' ); ?>:
+					<?php $geo_mashup_search->the_distance(); ?>
+				</p>
+			</div>
+			<?php endwhile; ?>		
+		<?php endif;?>
 	<?php else : ?>
 
 				<p><?php _e( 'No results found.', 'GeoMashupSearch' ); ?></p>
