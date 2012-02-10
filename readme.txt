@@ -21,6 +21,10 @@ Requires Geo Mashup 1.3.x or higher and PHP 5.
 
 "Find Me" button requires Geo Mashup 1.4.6 or higher and uses [geoPlugin](http://www.geoplugin.com/).
 
+= Translations =
+
+* Italian by Daniele Raimondi added in version 1.2
+
 == Frequently Asked Questions ==
 
 = Error on activation: "Parse error: syntax error, unexpected T_CLASS..." =

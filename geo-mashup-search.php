@@ -68,7 +68,7 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 			$this->basename = plugin_basename( __FILE__ );
 			$this->url_path = plugins_url( '', __FILE__ );
 			$this->scripts = array();
-			load_plugin_textdomain( 'GeoMashupSearch', '', dirname( $this->basename ) );
+			load_plugin_textdomain( 'GeoMashupSearch', '', path_join( dirname( $this->basename ), 'lang' ) );
 
 			// Scan Geo Mashup after it has been loaded
 			add_action( 'plugins_loaded', array( $this, 'action_plugins_loaded' ) );
