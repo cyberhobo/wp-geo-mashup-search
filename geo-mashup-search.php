@@ -430,7 +430,7 @@ class GeoMashupSearchWidget extends WP_Widget {
 					}else{
 						jQuery("input#<?php echo $this->get_field_id( 'categories' ); ?>").parents('p:first').show();
 					}
-				}	
+				}
 				check_content_type( jQuery("select#<?php echo $this->get_field_id( 'object_name' ); ?>") );
 				
 				jQuery("select#<?php echo $this->get_field_id( 'object_name' ); ?>").change(function() {
@@ -477,7 +477,7 @@ class GeoMashupSearchWidget extends WP_Widget {
 </p>
 <p>
 	<label for="<?php echo $this->get_field_id( 'object_name' ); ?>">
-		<?php _e( 'Type of content:', 'GeoMashupSearch' ); ?>
+		<?php _e( 'What to search:', 'GeoMashupSearch' ); ?>
 		 		<select id="<?php echo $this->get_field_id( 'object_name' ); ?>" name="<?php echo $this->get_field_name( 'object_name' ); ?>">
 		 			<option value="post"<?php echo 'post' == $this->get_default_value( $instance, 'object_name' ) ? ' selected="selected"' : ''; ?>>
 				<?php _e( 'posts', 'GeoMashupSearch' ); ?>

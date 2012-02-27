@@ -33,7 +33,6 @@
 
 	<h2><?php _e( 'Search results near', 'GeoMashupSearch' ); ?> "<?php echo $search_text; ?>"</h2>
 	
-	<?php print_r($geo_mashup_search->get_the_ID_list());?>
 	<?php if ( $geo_mashup_search->have_posts() ) : ?>
 
 	<?php echo GeoMashup::map( array(

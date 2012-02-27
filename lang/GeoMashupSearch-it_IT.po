@@ -173,8 +173,8 @@ msgstr "Cerca contenuti per posizione geografica di Geo Mashup."
 
 #: geo-mashup-search.php:468
 #@ GeoMashupSearch
-msgid "Type of content:"
-msgstr "Tipo di contenuto:"
+msgid "What to search:"
+msgstr "Cerca tra:"
 
 #: geo-mashup-search.php:474
 #@ GeoMashupSearch
