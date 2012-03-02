@@ -151,6 +151,7 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 			$this->result = null;
 			$this->current_result = -1;
 			$this->units = isset( $_REQUEST['units'] ) ? $_REQUEST['units'] : 'km';
+
 			$this->object_name = (isset( $_REQUEST['object_name'] ) && in_array($_REQUEST['object_name'], array('post', 'user', 'comment')) ) ? $_REQUEST['object_name'] : 'post';
 
 			// Define variables for the template
