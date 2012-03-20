@@ -190,7 +190,9 @@ if ( !class_exists( 'GeoMashupSearch' ) ) {
 					$this->results = GeoMashupDB::get_object_locations( $geo_query_args );
 					$this->result_count = count( $this->results );
 					if ( $this->result_count > 0 )
-							$max_km = $this->results[$this->result_count-1]->distance_km;
+						$max_km = $this->results[$this->result_count-1]->distance_km;
+					else
+						$max_km = $radius_km;
 				}
 
 			}
