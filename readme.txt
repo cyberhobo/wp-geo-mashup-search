@@ -6,7 +6,7 @@ Requires at least: 3.0
 Tested up to: 3.3.1
 Stable tag: 1.0
 
-Works with the [Geo Mashup plugin](http://wordpress.org/extend/plugins/geo-mashup/) to create a geo search widget.
+Originally created as an add-on to the [Geo Mashup plugin](http://wordpress.org/extend/plugins/geo-mashup/), this functionality was incorporated into the plugin as of [1.5 Beta 1](http://code.google.com/p/wordpress-geo-mashup/downloads/detail?name=geo-mashup-1.4.99.0.zip).
 
 == Description ==
 
